@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="description" content="ZCMU 2026–2027 bilingual Thai / Chinese class schedule">
+  <title>ZCMU Schedule • 2026–2027</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">Z</div>
+        <div>
+          <div class="brand-title">ZCMU Schedule</div>
+          <div class="brand-sub">2026–2027 • 中医药课程表</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="china-clock" title="China Standard Time / UTC+8">
+          <span class="clock-dot"></span>
+          <span id="chinaClock">--:--:--</span>
+          <small>China Time · UTC+8</small>
+        </div>
+        <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">◐</button>
+        <div class="segmented" id="langSwitch">
+          <button data-lang="th">TH</button>
+          <button data-lang="zh">中</button>
+          <button data-lang="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="live-dot"></span><span data-i18n="eyebrow">LIVE ACADEMIC DASHBOARD</span></div>
+          <h1><span data-i18n="title">ตารางเรียน</span><br><span class="muted">ZCMU / 浙江中医药大学</span></h1>
+          <p data-i18n="subtitle">ตารางเรียนแบบรายสัปดาห์ พร้อมเวลา China Time, countdown และสถานะแบบเรียลไทม์</p>
+        </div>
+        <div class="hero-visual">
+          <div class="orb orb-a"></div><div class="orb orb-b"></div>
+          <div class="hero-grid"></div>
+          <div class="hero-clock">
+            <span class="hero-clock-label">CST / UTC+8</span>
+            <strong id="heroTime">--:--</strong>
+            <span id="heroDate">---</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="next-card glass">
+          <div class="card-kicker" data-i18n="nextClass">NEXT CLASS</div>
+          <div id="nextClassContent" class="next-content"></div>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label" data-i18n="todayClasses">วันนี้มีเรียน</span>
+          <strong id="todayCount">0</strong>
+          <span id="todayMeta" class="stat-meta">—</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label" data-i18n="freeSlots">ช่วงว่างวันนี้</span>
+          <strong id="freeCount">0</strong>
+          <span class="stat-meta" data-i18n="freeHint">จาก 13 คาบ</span>
+        </article>
+        <article class="stat-card">
+          <span class="stat-label" data-i18n="currentWeek">สัปดาห์ปัจจุบัน</span>
+          <strong id="currentWeekStat">W--</strong>
+          <span id="weekDateStat" class="stat-meta">—</span>
+        </article>
+      </section>
+
+      <section class="controls-section">
+        <div class="section-head">
+          <div>
+            <div class="eyebrow">WEEK NAVIGATION</div>
+            <h2 data-i18n="weekSelector">เลือกสัปดาห์</h2>
+          </div>
+          <button class="today-btn" id="todayBtn" data-i18n="today">วันนี้</button>
+        </div>
+        <div class="week-scroller" id="weekScroller"></div>
+      </section>
+
+      <section class="toolbar">
+        <label class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="search" data-i18n-placeholder="search" placeholder="ค้นหาวิชา / อาจารย์ / ห้อง">
+        </label>
+        <div class="filter-group">
+          <button class="filter active" data-filter="all" data-i18n="all">ทั้งหมด</button>
+          <button class="filter" data-filter="morning" data-i18n="morning">เช้า</button>
+          <button class="filter" data-filter="afternoon" data-i18n="afternoon">บ่าย</button>
+          <button class="filter" data-filter="evening" data-i18n="evening">เย็น</button>
+        </div>
+      </section>
+
+      <section class="schedule-layout">
+        <div class="schedule-panel">
+          <div class="timeline-head">
+            <div class="week-title">
+              <span class="eyebrow">WEEK <span id="weekLabel">02</span></span>
+              <h2 id="weekTitle">Mon — Sun</h2>
+            </div>
+            <div class="legend">
+              <span><i class="legend-dot normal"></i><span data-i18n="legendNormal">ปกติ</span></span>
+              <span><i class="legend-dot soon"></i><span data-i18n="legendSoon">เหลือ ≤15 นาที</span></span>
+              <span><i class="legend-dot live"></i><span data-i18n="legendLive">กำลังเรียน</span></span>
+              <span><i class="legend-dot done"></i><span data-i18n="legendDone">เรียนจบแล้ว</span></span>
+            </div>
+          </div>
+          <div class="days-grid" id="daysGrid"></div>
+        </div>
+
+        <aside class="side-panel">
+          <div class="side-card">
+            <div class="side-head"><span data-i18n="miniCalendar">MINI CALENDAR</span><span id="monthLabel">SEP</span></div>
+            <div class="mini-calendar" id="miniCalendar"></div>
+          </div>
+          <div class="side-card">
+            <div class="side-head"><span data-i18n="timeline">TIMELINE</span><span id="timelineDate">—</span></div>
+            <div id="timelineList" class="timeline-list"></div>
+          </div>
+          <div class="side-card free-card">
+            <div class="side-head"><span data-i18n="freeTime">FREE TIME</span></div>
+            <div id="freeTimeContent"></div>
+          </div>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <div><strong>ZCMU Schedule</strong> · Static GitHub-ready app</div>
+      <div data-i18n="footer">เวลาเรียนอ้างอิงตาราง 富春校区 จากไฟล์ที่ให้มา • China Time (UTC+8)</div>
+    </footer>
+  </div>
+
+  <dialog id="courseDialog">
+    <button class="dialog-close" id="dialogClose">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+
+  <script src="data/schedule.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
