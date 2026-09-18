@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="ZCMU 2026–2027 academic timeline">
+  <title>ZCMU • University Timeline</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <a class="brand" href="index.html" style="text-decoration:none;color:inherit">
+    <div class="brand-mark">Z</div><div><div class="brand-title">ZCMU Schedule</div><div class="brand-sub">2026–2027 • 中医药课程表</div></div>
+  </a>
+  <div class="top-actions">
+    <div class="china-clock"><span class="clock-dot"></span><span id="chinaClock">--:--:--</span><small>China Time · UTC+8</small></div>
+    <button class="icon-btn" id="themeBtn" aria-label="Toggle theme">◐</button>
+    <div class="segmented"><button>TH</button><button>中</button><button>EN</button></div>
+  </div>
+</header>
+<nav class="page-nav"><a class="page-nav-link" href="index.html">📚 <span>ตารางเรียน</span></a><a class="page-nav-link active" href="timeline.html">🗓️ <span>Timeline มหาวิทยาลัย</span></a><a class="page-nav-link" href="study.html">📖 <span>ตารางอ่านหนังสือ</span></a></nav>
+<main>
+<section class="page-hero">
+  <div class="page-hero-copy"><div class="eyebrow"><span class="live-dot"></span> UNIVERSITY TIMELINE</div><h1>ปฏิทิน<br><span class="muted">มหาวิทยาลัย</span></h1><p>ภาพรวมปีการศึกษา 2026–2027 ของ Zhejiang Chinese Medical University พร้อมวันเปิดเรียน วันหยุด สอบ และช่วง Week 1–17 โดยใช้ข้อมูลจากปฏิทินที่คุณแนบมา</p></div>
+  <div class="page-hero-visual"><img src="assets/academic-calendar.jpg" alt="ZCMU Academic Calendar 2026–2027"><div class="page-hero-overlay"></div></div>
+</section>
+<section class="data-grid">
+  <article class="info-card"><div class="label">SEMESTER 1</div><h3>14 ก.ย. 2026 → 10 ม.ค. 2027</h3><p>เริ่มเรียน 14 ก.ย. 2026 และสิ้นสุดภาคการศึกษาตามปฏิทินมหาวิทยาลัย</p></article>
+  <article class="info-card"><div class="label">SEMESTER 2</div><h3>22 ก.พ. 2027 → 18 มิ.ย. 2027</h3><p>ภาคเรียนที่ 2 ตามปฏิทินปีการศึกษา 2026–2027</p></article>
+  <article class="info-card"><div class="label">CURRENT WEEK</div><h3 id="currentWeekText">Week 1</h3><p id="currentDateText">—</p></article>
+</section>
+<section class="calendar-frame">
+  <div class="calendar-caption"><h2>浙江中医药大学 2026–2027 学年校历</h2><span>Academic Calendar • Source image from university calendar provided</span></div>
+  <img src="assets/academic-calendar.jpg" alt="Academic calendar 2026-2027">
+</section>
+<section style="margin-top:18px">
+  <div class="section-head"><div><div class="eyebrow">TEACHING WEEKS</div><h2>Week 1–17</h2></div></div>
+  <table class="week-table"><thead><tr><th>WEEK</th><th>ช่วงวันที่</th><th>สถานะ</th></tr></thead><tbody id="weekTable"></tbody></table>
+</section>
+</main>
+<footer><div><strong>ZCMU Schedule</strong> · Static GitHub-ready app</div><div>Timeline อ้างอิงภาพปฏิทินมหาวิทยาลัยที่แนบมา • China Time UTC+8</div></footer>
+</div>
+<script>
+(function(){
+ const $=s=>document.querySelector(s); const KEY='zcmuTheme';
+ let theme=localStorage.getItem(KEY)||'light'; document.documentElement.dataset.theme=theme;
+ $('#themeBtn').onclick=()=>{theme=theme==='light'?'dark':'light';localStorage.setItem(KEY,theme);document.documentElement.dataset.theme=theme};
+ function now(){return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Shanghai'}))}
+ function clock(){const n=now();$('#chinaClock').textContent=n.toLocaleTimeString('en-GB',{hour12:false})}
+ function dateFor(w,d=1){return new Date(2026,8,14+(w-1)*7+(d-1))}
+ function weekNow(){const n=now(),start=new Date(2026,8,14);const diff=Math.floor((new Date(n.getFullYear(),n.getMonth(),n.getDate())-start)/86400000);return diff>=0&&diff<119?Math.floor(diff/7)+1:null}
+ const months=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+ const wn=weekNow()||1; $('#currentWeekText').textContent='Week '+wn; $('#currentDateText').textContent=dateFor(wn).getDate()+' '+months[dateFor(wn).getMonth()]+' '+dateFor(wn).getFullYear();
+ const body=$('#weekTable'); for(let w=1;w<=17;w++){const a=dateFor(w),b=dateFor(w,7);const tr=document.createElement('tr'); if(w===wn)tr.className='current'; tr.innerHTML=`<td><strong>W${String(w).padStart(2,'0')}</strong></td><td>${a.getDate()} ${months[a.getMonth()]} ${a.getFullYear()} — ${b.getDate()} ${months[b.getMonth()]} ${b.getFullYear()}</td><td>${w===1?'เปิดเรียนวันแรก':w===wn?'สัปดาห์ปัจจุบัน':'ภาคเรียน'}</td>`;body.appendChild(tr)}
+ clock();setInterval(clock,1000);
+})();
+</script>
+</body></html>

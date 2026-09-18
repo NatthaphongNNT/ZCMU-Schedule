@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="ZCMU nightly study plan 19:30–23:30">
+<title>ZCMU • Study Plan</title><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="app-shell">
+<header class="topbar">
+  <a class="brand" href="index.html" style="text-decoration:none;color:inherit"><div class="brand-mark">Z</div><div><div class="brand-title">ZCMU Schedule</div><div class="brand-sub">2026–2027 • 中医药课程表</div></div></a>
+  <div class="top-actions"><div class="china-clock"><span class="clock-dot"></span><span id="chinaClock">--:--:--</span><small>China Time · UTC+8</small></div><button class="icon-btn" id="themeBtn">◐</button><div class="segmented"><button>TH</button><button>中</button><button>EN</button></div></div>
+</header>
+<nav class="page-nav"><a class="page-nav-link" href="index.html">📚 <span>ตารางเรียน</span></a><a class="page-nav-link" href="timeline.html">🗓️ <span>Timeline มหาวิทยาลัย</span></a><a class="page-nav-link active" href="study.html">📖 <span>ตารางอ่านหนังสือ</span></a></nav>
+<main>
+<section class="page-hero">
+ <div class="page-hero-copy"><div class="eyebrow"><span class="live-dot"></span> NIGHT STUDY SYSTEM</div><h1>ตารางอ่าน<br><span class="muted">19:30 — 23:30</span></h1><p>ระบบอ่านหนังสือหลังเลิกเรียน โดยเน้น Preview สิ่งที่จะเรียนวันพรุ่งนี้ก่อน แล้วแบ่งเวลาทำการบ้านและ Active Recall พร้อมพัก 20 นาที 1 ครั้ง</p></div>
+ <div class="page-hero-visual"><div class="hero-clock" style="margin:auto"><span class="hero-clock-label">CHINA TIME / UTC+8</span><strong id="heroTime">--:--:--</strong><span id="heroDate">---</span></div></div>
+</section>
+<section class="data-grid">
+ <article class="info-card"><div class="label">TODAY</div><h3 id="selectedDate">—</h3><p id="todaySummary">—</p></article>
+ <article class="info-card"><div class="label">TOMORROW</div><h3 id="tomorrowSummary">—</h3><p>วิชาที่จะใช้เป็น Preview หลักคืนนี้</p></article>
+ <article class="info-card"><div class="label">ROUTINE</div><h3>4 ชั่วโมง</h3><p>19:30–23:30 • พัก 20 นาที • การบ้าน 60 นาที</p></article>
+</section>
+<section class="study-layout">
+ <div class="study-panel"><div class="study-head"><div><div class="eyebrow">DAILY PLAN</div><h2>แผนคืนนี้</h2></div><div class="study-date" id="planDate">—</div></div><div class="study-list" id="studyList"></div></div>
+ <aside class="study-side">
+  <div class="focus-card"><div class="eyebrow">TOMORROW PREVIEW</div><h3>สิ่งที่ควรอ่านก่อน</h3><div id="focusList"></div></div>
+  <div class="routine-card"><div class="eyebrow">EVERY NIGHT</div><h3>กฎประจำวัน</h3><p>19:30 เริ่ม • 21:00 พัก 20 นาที • 21:20 ทำการบ้าน • 23:10 สรุป • 23:30 หยุดอ่าน</p></div>
+ </aside>
+</section>
+</main>
+<footer><div><strong>ZCMU Schedule</strong> · Static GitHub-ready app</div><div>แผนอ่านหนังสือผูกกับตารางเรียนใน data/schedule.js • Week 1 เริ่ม 14 ก.ย. 2026</div></footer>
+</div>
+<script src="data/schedule.js"></script>
+<script>
+(function(){
+ const $=s=>document.querySelector(s), KEY='zcmuTheme'; let theme=localStorage.getItem(KEY)||'light'; document.documentElement.dataset.theme=theme;
+ $('#themeBtn').onclick=()=>{theme=theme==='light'?'dark':'light';localStorage.setItem(KEY,theme);document.documentElement.dataset.theme=theme};
+ const D=window.SCHEDULE_DATA, labels=['จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์','อาทิตย์'];
+ function now(){return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Shanghai'}))}
+ function dateFor(w,d=1){return new Date(2026,8,14+(w-1)*7+(d-1))}
+ function weekNow(n=now()){const start=new Date(2026,8,14);const diff=Math.floor((new Date(n.getFullYear(),n.getMonth(),n.getDate())-start)/86400000);return diff>=0&&diff<119?Math.floor(diff/7)+1:null}
+ function dow(n){return ((n.getDay()+6)%7)+1}
+ function active(w,d){return D.courses.flatMap(c=>c.occ.filter(o=>o.weeks.includes(w)&&o.d===d).map(o=>({...o,course:c}))).sort((a,b)=>a.start.localeCompare(b.start))}
+ function label(c){return c.th||c.zh}
+ function tomorrow(){const n=now(); const t=new Date(n); t.setDate(t.getDate()+1); return {date:t,w:weekNow(t),d:dow(t)} }
+ function build(){const n=now(), w=weekNow(n); const t=tomorrow(); const tomorrowClasses=t.w?active(t.w,t.d):[]; const todayClasses=w?active(w,dow(n)):[];
+  $('#selectedDate').textContent=n.toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'numeric'}); $('#planDate').textContent=n.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'short'});
+  $('#todaySummary').textContent=todayClasses.length?`${todayClasses.length} คาบวันนี้ • ${todayClasses.map(x=>x.start).join(' · ')}`:'วันนี้ไม่มีเรียน';
+  $('#tomorrowSummary').textContent=tomorrowClasses.length?`${labels[t.d-1]} • ${tomorrowClasses.length} คาบ`:'ไม่มีเรียนพรุ่งนี้';
+  const focus=$('#focusList'); focus.innerHTML=''; if(!tomorrowClasses.length){focus.innerHTML='<div class="focus-item"><strong>ไม่มีคาบเรียนพรุ่งนี้</strong><span>ใช้คืนนี้สำหรับทบทวนสัปดาห์และเคลียร์การบ้าน</span></div>'} else tomorrowClasses.slice(0,3).forEach((x,i)=>{const div=document.createElement('div');div.className='focus-item';div.innerHTML=`<strong>${i+1}. ${label(x.course)}</strong><span>${x.start}–${x.end} • ${x.room} • ${x.course.teacher||'—'}</span>`;focus.appendChild(div)});
+  const blocks=[
+   ['19:30–20:20','Preview วิชาหลักของพรุ่งนี้',tomorrowClasses[0]?`โฟกัส ${label(tomorrowClasses[0].course)} • อ่านภาพรวม + ศัพท์ + หัวข้อสำคัญ`:'Preview วิชาที่จะเรียนวันถัดไป หรือทบทวนวิชาที่ยากที่สุด','PREVIEW'],
+   ['20:20–21:00','Preview วิชาที่สอง',tomorrowClasses[1]?`อ่าน ${label(tomorrowClasses[1].course)} แบบไม่ลงรายละเอียดมาก`:'ทบทวนศัพท์ / โน้ตจากวันนี้','PREVIEW'],
+   ['21:00–21:20','พัก 20 นาที','พักจริง ๆ • ลุกเดิน • ดื่มน้ำ • ไม่อ่านหนังสือ','BREAK'],
+   ['21:20–22:20','ทำการบ้าน','เคลียร์งานที่อาจารย์สั่งก่อน แล้วค่อยทำงานค้าง','HOMEWORK'],
+   ['22:20–23:10','Active Recall','ปิดหนังสือแล้วเขียนสิ่งที่จำได้ • ศัพท์ • concept • คำถามที่ยังไม่เข้าใจ','RECALL'],
+   ['23:10–23:30','สรุป + เตรียมพรุ่งนี้','สรุป 3–5 ข้อ • เตรียมสมุด/ไฟล์ • เช็กตารางเรียนพรุ่งนี้','WRAP UP']
+  ];
+  $('#studyList').innerHTML=blocks.map(b=>`<div class="study-block ${b[3]==='BREAK'?'break':''}"><div class="study-time">${b[0]}</div><div><div class="study-title">${b[1]}</div><div class="study-desc">${b[2]}</div></div><span class="study-tag">${b[3]}</span></div>`).join('');
+ }
+ function clock(){const n=now();const time=n.toLocaleTimeString('en-GB',{hour12:false});$('#chinaClock').textContent=time;$('#heroTime').textContent=time;$('#heroDate').textContent=n.toLocaleDateString('en-CA');}
+ build();clock();setInterval(clock,1000);setInterval(build,60000);
+})();
+</script>
+</body></html>
